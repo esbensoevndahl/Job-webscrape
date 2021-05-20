@@ -3,5 +3,7 @@ This will be my attempt to scrape the internet for relevant jobs and keep track 
 
 
 $pip install beautifulsoup4
-$pip install lxml
 $pip install requests
+$pip install pandas
+
+$pip install lxml
