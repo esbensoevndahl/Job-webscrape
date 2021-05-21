@@ -18,11 +18,14 @@ def getSoup():
 
 
 
-def getTitleAndUrl(soup):
+def extractInformation(soup):
     jobTitle = {}
-    jobLocation = {}
-    jobEasyApply = {}
     jobURL = {}
+
+    companyName = {}
+    location = {}
+    EasyApply = {}
+
     numJob = 0
 
     # for job in soup.findAll("h2", class_="title"):
@@ -32,32 +35,27 @@ def getTitleAndUrl(soup):
     #     index += 1
 
     for li in soup.find_all(name="li", attrs={"class" : "react-job-listing css-wp148e eigr9kq3"}):
+        #get jobtitle, location and whether it is Easy Apply or not.
         jobTitle[numJob] = li['data-normalize-job-title']
-        jobLocation[numJob] = li['data-job-loc']
-        jobEasyApply[numJob] = li['data-is-easy-apply'] == "true"
+        location[numJob] = li['data-job-loc']
+        EasyApply[numJob] = li['data-is-easy-apply']
 
-        
-        #["data-normalize-job-title"]
-        #links[numJob] = li.find_all(name="a", aatrs={"class" : "css-jq9w1v jobLink css-1rd3saf eigr9kq2"})
+        #get company name and link to company and job page
+        a = li.find(name="a", attrs={"class" : "css-l2wjgv e1n63ojh0 jobLink"}) 
+        jobURL[numJob] = ("glassdoor.com" + str(a.get('href'))) 
+        companyName[numJob] = a.find("span").get_text() 
 
         numJob += 1
 
-
-
-    return (jobTitle, jobLocation, jobEasyApply)
-
-
-
-def getCompanyName(soup):
-    Company = {}
-    return None
-
-
+        #["data-normalize-job-title"]
+        #links[numJob] = li.find_all(name="a", aatrs={"class" : "css-jq9w1v jobLink css-1rd3saf eigr9kq2"})
+    return (jobTitle, jobURL, companyName, location, EasyApply)
 
 
 def main():
     soup = getSoup()
-    ret = getTitleAndUrl(soup)
-    print(ret)
+    ret = extractInformation(soup)
+    for i in range(len(ret)):
+        print(ret[i])
 
 main()
